@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.jnnybot.nizias.twa",
+    "sha256_cert_fingerprints": [
+      "BE:8E:3E:93:0F:81:97:E0:CC:05:F6:DA:3D:82:8B:BB:D0:CA:33:7C:44:00:A8:B4:DA:B3:09:B4:62:66:70:A0"
+    ]
+  }
+}]

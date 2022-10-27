@@ -44,6 +44,43 @@ exports.upsertGoogleUser = (accessToken, refreshToken, profile, cb) => {
   })
 };
 
+exports.upsertFbUser = (accessToken, refreshToken, profile, cb) => {
+  User.findOne({'facebookProvider.id': profile.id})
+  .then(user => {
+    if (!user) {
+      const newUser = new User({
+        name: profile.displayName,
+        history:[nomi.START],
+        email: profile.emails[0].value,
+        image: profile.photos[0].value,
+        facebookProvider: {
+          id: profile.id
+        },
+        created: new Date()
+      });
+      newUser.save(function(error, savedUser) {
+          if (error) {
+              //console.log(error);
+          }
+          var usefulInfosUser={
+            id:savedUser.id,
+            name:savedUser.name,
+            image:savedUser.image
+          }
+          return cb(error, usefulInfosUser);
+      })
+    }
+    else {
+        var usefulInfosUser={
+          id:user.id,
+          name:user.name,
+          image:user.image
+        }
+        return cb('', usefulInfosUser);
+    }
+  })
+};
+
 exports.getHistory = (req, res, next) => {
   User.findOne({
     _id: req.userId

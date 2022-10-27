@@ -3,6 +3,7 @@ const router = express.Router();
 
 var passport = require('passport');
 var GoogleTokenStrategy = require('passport-google-token').Strategy;
+var FacebookTokenStrategy = require('passport-facebook-token');
 
 const userCtrl = require('../../controllers/nomi/user');
 const pageCtrl = require('../../controllers/nomi/page');
@@ -35,6 +36,35 @@ passport.use(new GoogleTokenStrategy(
       });
     }));
 
+passport.use(new FacebookTokenStrategy(
+
+
+        {
+            clientID: '421975540127985',
+            clientSecret: 'f6de730284cbf1a233206dff3a39d1ae'
+        }
+
+
+
+        /*
+        {
+            clientID: '660173108818636',
+            clientSecret: '2748599215c9da589730b356c6f05fad'
+        }
+        */
+
+
+
+
+
+        ,
+        function (accessToken, refreshToken, profile, done) {
+          // I HAVE ACCESSTOKEN AND PROFILE
+          userCtrl.upsertFbUser(accessToken, refreshToken, profile, function(err, user) {
+                return done(err, user);
+          });
+}));
+
 router.post('/google',
             passport.authenticate('google-token', {session: false}),
             function(req, res, next) {
@@ -54,6 +84,27 @@ router.post('/google',
             userCtrl.generateToken,
             userCtrl.sendToken
           );
+
+
+router.post('/fb',
+                      passport.authenticate('facebook-token', {session: false}),
+                      function(req, res, next) {
+                        if (!req.user) {
+                          return res.send(401, 'User Not Authenticated');
+                        }
+                        req.auth = {
+                          id: req.user.id
+                        };
+                        // for next
+                        req.userId=req.user.id
+                        //
+                        return next();
+                      },
+                      userCtrl.getHistory,
+                      userCtrl.updateHistoryIfBeginning,
+                      userCtrl.generateToken,
+                      userCtrl.sendToken
+);
 
 router.get('/get_infos',
             userCtrl.checkCookies,

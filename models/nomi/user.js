@@ -7,6 +7,9 @@ const userSchema = mongoose.Schema({
   googleProvider: {
     id: { type: String, required: false }
   },
+  facebookProvider: {
+    id: { type: String, required: false }
+  },
   created: { type: Date, required: true },
   history:[]
 });

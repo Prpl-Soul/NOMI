@@ -48,6 +48,7 @@ exports.upsertFbUser = (accessToken, refreshToken, profile, cb) => {
   User.findOne({'facebookProvider.id': profile.id})
   .then(user => {
     if (!user) {
+      console.log(profile)
       const newUser = new User({
         name: profile.displayName,
         history:[nomi.START],
@@ -62,6 +63,7 @@ exports.upsertFbUser = (accessToken, refreshToken, profile, cb) => {
           if (error) {
               //console.log(error);
           }
+          console.log(savedUser)
           var usefulInfosUser={
             id:savedUser.id,
             name:savedUser.name,
